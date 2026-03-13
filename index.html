@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bio</title>
+    <!-- Thêm font chữ hiện đại từ Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome cho icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS tuỳ chỉnh giao diện Premium Dark Mode + Glassmorphism */
+        :root {
+            --bg-color: #0f172a;
+            --container-bg: rgba(30, 41, 59, 0.6);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gradient-ins: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            --gradient-zalo: linear-gradient(135deg, #0068ff 0%, #00c6ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            /* Thêm gradient mờ làm nền dạng aura */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .profile-container {
+            background: var(--container-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            /* Hiệu ứng trượt lên mượt mà khi load trang */
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Vòng sáng xoay quanh avatar */
+        .avatar-border {
+            position: absolute;
+            top: -3px; left: -3px; right: -3px; bottom: -3px;
+            background: linear-gradient(45deg, #3b82f6, #ec4899);
+            border-radius: 50%;
+            z-index: 1;
+            animation: spin 5s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .bio {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 16px 20px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        /* Hiệu ứng nền khi trỏ chuột */
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .link-btn:hover::before {
+            opacity: 1;
+        }
+
+        .link-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Màu riêng cho từng mạng xã hội */
+        .btn-ins::before {
+            background: var(--gradient-ins);
+        }
+        
+        .btn-ins:hover {
+            box-shadow: 0 15px 30px -5px rgba(220, 39, 67, 0.4);
+        }
+
+        .btn-ins i {
+            color: #ff527f;
+            transition: color 0.4s ease;
+            font-size: 1.4rem;
+        }
+        
+        .btn-ins:hover i {
+            color: white;
+        }
+
+        .btn-zalo::before {
+            background: var(--gradient-zalo);
+        }
+
+        .btn-zalo:hover {
+            box-shadow: 0 15px 30px -5px rgba(0, 104, 255, 0.4);
+        }
+
+        .btn-zalo .zalo-icon {
+            color: #00c6ff;
+            transition: color 0.4s ease;
+        }
+        
+        .btn-zalo:hover .zalo-icon {
+            color: white;
+        }
+
+        /* Icon chữ giả lập Zalo */
+        .zalo-icon {
+            font-weight: 900;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-size: 1.15rem;
+            letter-spacing: -0.5px;
+        }
+
+        .footer {
+            margin-top: 36px;
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .footer i {
+            color: #ec4899;
+            font-size: 0.8rem;
+        }
+
+        /* ------------------------------------- */
+        /* --- TỐI ƯU HÓA CHO ĐIỆN THOẠI --- */
+        /* ------------------------------------- */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px; /* Giảm padding viền trang */
+            }
+
+            .profile-container {
+                padding: 30px 20px; /* Thu gọn padding bên trong hộp */
+                border-radius: 20px; /* Góc bo nhỏ lại một chút */
+            }
+
+            .avatar-container {
+                width: 100px; /* Ảnh đại diện nhỏ lại một chút */
+                height: 100px;
+                margin-bottom: 20px;
+            }
+
+            .name {
+                font-size: 1.5rem; /* Cỡ chữ tên nhỏ lại */
+                margin-bottom: 6px;
+            }
+
+            .bio {
+                font-size: 0.95rem; /* Cỡ chữ bio nhỏ lại */
+                margin-bottom: 24px;
+                padding: 0; 
+            }
+
+            .link-btn {
+                padding: 16px 18px; /* Tối ưu padding nút bấm */
+                font-size: 1rem;
+                border-radius: 14px;
+            }
+            
+            .link-btn i {
+                font-size: 1.2rem;
+            }
+
+            .zalo-icon {
+                font-size: 1.05rem;
+            }
+        }
+        /* ------------------------------------- */
+        /* --- ĐỊNH DẠNG VIDEO BACKGROUND --- */
+        /* ------------------------------------- */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Đảm bảo video nằm dưới cùng */
+        }
+        
+        /* Lớp phủ đen mờ trên video để nổi bật text */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.4); 
+            z-index: -1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- VIDEO BẮT NỀN -->
+    <video autoplay muted loop playsinline class="video-bg">
+        <source src="videos/background.mp4" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ video.
+    </video>
+    
+    <!-- LỚP PHỦ NỀN -->
+    <div class="overlay"></div>
+
+    <div class="profile-container">
+        <div class="avatar-container">
+            <div class="avatar-border"></div>
+            <img src="images/Untitled.jpg" alt="Avatar" class="avatar" id="profile-img">
+        </div>
+        
+        <h1 class="name">Gia Hân</h1>
+        <p class="bio">Xin chào! Nhấn vào các liên kết bên dưới để kết nối và <strong>Mở khóa Hiệu ứng CapCut VIP</strong> nhé 👇</p>
+        
+        <div class="links">
+            <a href="#" onclick="openSocial(event, 'ins', 'Y2Ftel8yYw==')" class="link-btn btn-ins">
+                <i class="fa-brands fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+            
+            <a href="#" onclick="openSocial(event, 'zalo', 'MDk3MzEzMjMzNg==')" class="link-btn btn-zalo">
+                <span class="zalo-icon">Zalo</span>
+                <span>Nhắn tin Zalo</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            Built with <i class="fa-solid fa-heart"></i> for GitHub Pages
+        </div>
+    </div>
+
+    <script>
+        // Hàm giải mã Base64 sang chuỗi gốc (chống quét data bằng bot scraper)
+        function b64DecodeUnicode(str) {
+            return decodeURIComponent(atob(str).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
+
+        // Script xử lý mở ứng dụng mượt mà đồng thời giải mã bảo mật
+        function openSocial(event, platform, encodedData) {
+            event.preventDefault(); // Ngăn trình duyệt nhảy trang mặc định
+            
+            // Giải mã data trả về ID thực sự của bạn
+            const data = b64DecodeUnicode(encodedData); 
+            let appUrl = '';
+            let webUrl = '';
+
+            if (platform === 'ins') {
+                appUrl = 'instagram://user?username=' + data;
+                webUrl = 'https://www.instagram.com/' + data + '/';
+            } else if (platform === 'zalo') {
+                appUrl = 'https://zalo.me/' + data;
+                webUrl = 'https://zalo.me/' + data; // Zalo dùng chung link web để hệ thống xử lí deeplink
+            }
+
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                if (platform === 'ins') {
+                    // Cố gắng mở app trước
+                    window.location.href = appUrl;
+                    
+                    // Xử lý fallback chuyển qua trình duyệt nếu máy không có app sau khoảng delay
+                    let start = Date.now();
+                    setTimeout(function() {
+                        let end = Date.now();
+                        // Xác nhận nếu iOS/Android nhảy pop-up hỏi (thời gian sẽ trễ) hoặc trình duyệt bị ẩn đi thì KHÔNG mở web nữa
+                        if (end - start < 1500 && document.visibilityState === 'visible') {
+                            window.location.href = webUrl;
+                        }
+                    }, 800);
+                } else if (platform === 'zalo') {
+                    // Zalo trên mobile: mở tab mới (window.open) thường bị trình duyệt Safari chặn. 
+                    // Chuyển hướng trực tiếp (location.href) an toàn và mượt hơn, hệ thống sẽ tự mở app Zalo
+                    window.location.href = appUrl;
+                }
+            } else {
+                // Trên máy tính/laptop, ưu tiên mở tại một Tab mới
+                window.open(webUrl, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>
