@@ -338,10 +338,43 @@
             }).join(''));
         }
 
+        // Hiện bảng thông báo khi người dùng đang ở trong TikTok/Facebook
+        function showInAppBrowserAlert() {
+            if (document.getElementById('iab-alert')) return;
+            const overlay = document.createElement('div');
+            overlay.id = 'iab-alert';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:25px;backdrop-filter:blur(10px);animation:slideUpFade 0.3s ease;';
+            overlay.innerHTML = `
+                <div style="background:var(--container-bg);padding:30px 20px;border-radius:24px;border:1px solid rgba(255,255,255,0.1);max-width:340px;width:100%;">
+                    <i class="fa-solid fa-compass" style="font-size:3.5rem;color:#ec4899;margin-bottom:20px;"></i>
+                    <h2 style="font-size:1.4rem;margin-bottom:12px;">Mở bằng Trình duyệt</h2>
+                    <p style="font-size:0.95rem;color:var(--text-muted);line-height:1.6;margin-bottom:24px;">TikTok và Facebook chặn mở liên kết ứng dụng khác. Nhấn hướng dẫn sau để tiếp tục:</p>
+                    <div style="background:rgba(0,0,0,0.3);padding:15px;border-radius:16px;text-align:left;margin-bottom:24px;font-size:0.95rem;">
+                        <p style="margin-bottom:12px;display:flex;align-items:center;gap:10px;"><span style="background:#3b82f6;color:white;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:0.8rem;font-weight:bold;">1</span> Nhấn vào dấu <b style="letter-spacing:2px;background:#fff;color:#000;padding:2px 6px;border-radius:4px;margin:0 2px;">⋯</b> hoặc <b style="letter-spacing:2px;background:#fff;color:#000;padding:2px 6px;border-radius:4px;margin:0 2px;">⋮</b> ở góc trên cùng</p>
+                        <p style="display:flex;align-items:center;gap:10px;"><span style="background:#ec4899;color:white;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:0.8rem;font-weight:bold;">2</span> Chọn <b>"Mở trong trình duyệt"</b> (Open in Browser / Safari)</p>
+                    </div>
+                    <button onclick="document.getElementById('iab-alert').remove()" style="padding:14px 30px;border-radius:16px;border:none;background:var(--gradient-ins);color:white;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">Đã hiểu!</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
         // Script xử lý mở ứng dụng mượt mà đồng thời giải mã bảo mật
         function openSocial(event, platform, encodedData) {
             event.preventDefault(); // Ngăn trình duyệt nhảy trang mặc định
             
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+            
+            // Phát hiện nếu đang mở bằng trình duyệt riêng của app TikTok/FB/Insta
+            const isInAppBrowser = /TikTok|ByteLocale|FBAN|FBAV|Instagram/i.test(ua);
+
+            if (isInAppBrowser) {
+                // Show hướng dẫn thoát khỏi TikTok Browser để tránh lỗi
+                showInAppBrowserAlert();
+                return;
+            }
+
             // Giải mã data trả về ID thực sự của bạn
             const data = b64DecodeUnicode(encodedData); 
             let appUrl = '';
@@ -355,8 +388,6 @@
                 webUrl = 'https://zalo.me/' + data; // Zalo dùng chung link web để hệ thống xử lí deeplink
             }
 
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
             if (isMobile) {
                 if (platform === 'ins') {
                     // Cố gắng mở app trước
@@ -372,8 +403,7 @@
                         }
                     }, 800);
                 } else if (platform === 'zalo') {
-                    // Zalo trên mobile: mở tab mới (window.open) thường bị trình duyệt Safari chặn. 
-                    // Chuyển hướng trực tiếp (location.href) an toàn và mượt hơn, hệ thống sẽ tự mở app Zalo
+                    // Zalo trên mobile: chuyển hướng trực tiếp (location.href) an toàn và mượt hơn
                     window.location.href = appUrl;
                 }
             } else {
